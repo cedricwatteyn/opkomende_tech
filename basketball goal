@@ -1,0 +1,24 @@
+const int irReceiverPin = 2; // Grove IR Receiver SIG
+const int ledPin = 13;       // Built-in LED
+
+void setup() {
+  pinMode(irReceiverPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int state = digitalRead(irReceiverPin);
+
+  if (state == LOW) {
+    // Beam is present — nothing is interrupting
+    digitalWrite(ledPin, LOW);
+    Serial.println("Beam OK");
+  } else {
+    // Beam is broken
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Beam interrupted!");
+  }
+
+  delay(100);
+}
