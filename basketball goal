@@ -1,19 +1,19 @@
 #include <Adafruit_NeoPixel.h>
 
 const int irReceiverPin = 2;   // IR receiver pin
-const int ledPin = 13;         // Built-in LED
+const int ledPin = 13;         //  LED
 const int platePin = 3;        // Pressure plate pin
 
 // Neopixel settings
-const int neoPin = 6;          // Data pin for NeoPixel stick
-const int numPixels = 8;       // Number of LEDs on stick
+const int neoPin = 6;          // Data pin voor NeoPixel stick
+const int numPixels = 8;       // Aantal LED's
 Adafruit_NeoPixel pixels(numPixels, neoPin, NEO_GRB + NEO_KHZ800);
 
 bool countdownActive = false;
 unsigned long countdownStartTime = 0;
 bool beamBroken = false;
 
-int currentPixel = 0; // Which pixel to light next
+int currentPixel = 0; // Welke pixel als vervolgens moet branden
 
 void setup() {
   pinMode(irReceiverPin, INPUT);
@@ -29,9 +29,9 @@ void setup() {
 
 void loop() {
   int beamState = digitalRead(irReceiverPin);
-  int plateState = digitalRead(platePin); // LOW when pressed
+  int plateState = digitalRead(platePin); // LOW wanneer ingedrukt
 
-  // Start countdown when plate is pressed
+  // Start tellen wanneer pressure plate ingedrukt is
   if (!countdownActive && plateState == LOW) {
     countdownActive = true;
     countdownStartTime = millis();
@@ -40,12 +40,12 @@ void loop() {
   }
 
   if (countdownActive) {
-    // Check for beam interruption during countdown
+    // Check of de straal onderbroken wordt
     if (beamState == HIGH) { // Beam broken
       beamBroken = true;
     }
 
-    // After 5 seconds, decide result
+    // Na 5 seconden, bekijk resultaat
     if (millis() - countdownStartTime >= 5000) {
       if (beamBroken) {
         Serial.println("Score!");
