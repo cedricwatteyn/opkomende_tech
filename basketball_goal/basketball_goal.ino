@@ -3,10 +3,11 @@
 #include <DFRobotDFPlayerMini.h>
 
 // ---------- Pins ----------
-const int irReceiverPin = 2;   // IR beam sensor
-const int platePin = 3;        // Startknop
-const int ledPin = 13;         // Indicator LED
-const int neoPin = 6;          // NeoPixel data pin
+const int irReceiverPin = 2;    // IR beam sensor
+const int platePin = 3;         // Startknop
+const int ledPin = 13;          // Indicator LED
+const int neoPin = 6;           // NeoPixel data pin
+const int piezzoPin = A0;       // Piezzo sensor op het bord
 
 // ---------- NeoPixel ----------
 const int numPixels = 8;
@@ -20,9 +21,14 @@ DFRobotDFPlayerMini myDFPlayer;
 bool countdownActive = false;
 unsigned long countdownStartTime = 0;
 bool beamBroken = false;
+bool piezzoHit = false;
 
 int currentPixel = 0;
-int score = 0; // Score teller
+int score = 0;            // Score teller
+int scoreWithoutBoard = 0; // Score zonder bord
+
+// ---------- Piezzo drempel ----------
+const int piezzoThreshold = 100; // waarde afhankelijk van piezzo, moet getest worden
 
 void setup() {
   // ---------- Input/Output ----------
@@ -51,41 +57,55 @@ void loop() {
   // ---------- Lees inputs ----------
   int beamState = digitalRead(irReceiverPin);
   int startState = digitalRead(platePin);
+  int piezzoValue = analogRead(piezzoPin);
 
   // ---------- Start countdown ----------
   if (!countdownActive && startState == LOW) {
     countdownActive = true;
     countdownStartTime = millis();
     beamBroken = false;
+    piezzoHit = false;
     Serial.println("Countdown gestart!");
   }
 
   if (countdownActive) {
-    // Check of IR beam onderbroken is
+    // Check IR beam
     if (beamState == HIGH) {
       beamBroken = true;
+    }
+
+    // Check piezzo
+    if (piezzoValue > piezzoThreshold) {
+      piezzoHit = true;
     }
 
     // Na 5 seconden countdown
     if (millis() - countdownStartTime >= 5000) {
       if (beamBroken) {
-        // Score
-        score++;
-        Serial.print("Score! Totaal = ");
-        Serial.println(score);
+        if (piezzoHit) {
+          score++; // Score met bord
+          Serial.print("Score + bord! Totaal = ");
+          Serial.println(score);
 
-        digitalWrite(ledPin, HIGH);
-        pixels.setPixelColor(currentPixel, pixels.Color(0, 255, 0)); // Groen
-        myDFPlayer.play(1); // Score geluid
+          digitalWrite(ledPin, HIGH);
+          pixels.setPixelColor(currentPixel, pixels.Color(0, 255, 0)); // Groen
+          myDFPlayer.play(1); // Score geluid
+        } else {
+          scoreWithoutBoard++; // Score zonder bord
+          Serial.print("Score zonder bord! Totaal = ");
+          Serial.println(scoreWithoutBoard);
+
+          digitalWrite(ledPin, LOW);
+          pixels.setPixelColor(currentPixel, pixels.Color(255, 0, 0)); // Rood
+          myDFPlayer.play(2); // Miss/zonder bord geluid
+        }
       } else {
-        // Miss
-        Serial.print("Miss! Totaal = ");
-        Serial.println(score);
-
+        Serial.println("Miss!");
         digitalWrite(ledPin, LOW);
-        pixels.setPixelColor(currentPixel, pixels.Color(255, 0, 0)); // Rood
+        pixels.setPixelColor(currentPixel, pixels.Color(0, 0, 255)); // Blauw = geen score
         myDFPlayer.play(2); // Miss geluid
       }
+
       pixels.show();
 
       // Volgende pixel
