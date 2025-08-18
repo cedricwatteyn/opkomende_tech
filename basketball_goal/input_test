@@ -1,28 +1,22 @@
-// Testscript voor alle inputs
-// Drukknoppen, IR-beam sensor
-const int irReceiverPin = 2;
-const int platePin = 3;   // Startknop
-const int resetPin = 4;   // Resetknop
+// Testscript voor inputs (zonder resetknop)
+const int irReceiverPin = 2;  // IR beam sensor
+const int platePin = 3;       // Startknop
 
 void setup() {
   Serial.begin(9600);
   pinMode(irReceiverPin, INPUT);
   pinMode(platePin, INPUT_PULLUP);
-  pinMode(resetPin, INPUT_PULLUP);
   Serial.println("Input test gestart...");
 }
 
 void loop() {
   int irState = digitalRead(irReceiverPin);
   int startState = digitalRead(platePin);
-  int resetState = digitalRead(resetPin);
 
   Serial.print("IR Beam: ");
   Serial.print(irState);
   Serial.print(" | Startknop: ");
-  Serial.print(startState);
-  Serial.print(" | Resetknop: ");
-  Serial.println(resetState);
+  Serial.println(startState);
 
   delay(500); // update elke 0.5 sec
 }
