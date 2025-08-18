@@ -1,22 +1,26 @@
-// Testscript voor inputs (zonder resetknop)
-const int irReceiverPin = 2;  // IR beam sensor
-const int platePin = 3;       // Startknop
+// Test alle inputs: startknop, IR-beam sensor, piezzo
+
+const int irReceiverPin = 2;
+const int platePin = 3;
+const int piezzoPin = A0;
 
 void setup() {
-  Serial.begin(9600);
   pinMode(irReceiverPin, INPUT);
   pinMode(platePin, INPUT_PULLUP);
-  Serial.println("Input test gestart...");
+  Serial.begin(9600);
 }
 
 void loop() {
-  int irState = digitalRead(irReceiverPin);
   int startState = digitalRead(platePin);
+  int beamState = digitalRead(irReceiverPin);
+  int piezzoValue = analogRead(piezzoPin);
 
-  Serial.print("IR Beam: ");
-  Serial.print(irState);
-  Serial.print(" | Startknop: ");
-  Serial.println(startState);
+  Serial.print("Startknop: ");
+  Serial.print(startState == LOW ? "GEKLIKTE" : "NIET geklikt");
+  Serial.print(" | IR-beam: ");
+  Serial.print(beamState == HIGH ? "ONDERBROKEN" : "ONDERBROKEN NIET");
+  Serial.print(" | Piezzo: ");
+  Serial.println(piezzoValue);
 
-  delay(500); // update elke 0.5 sec
+  delay(500); // half seconde pauze voor duidelijk lezen
 }
