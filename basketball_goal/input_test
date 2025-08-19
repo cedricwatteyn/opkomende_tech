@@ -42,4 +42,8 @@ void loop() {
   // Piezzo
   if (piezzoValue > piezzoThreshold) {
     Serial.print("Piezzo piek gedetecteerd! Waarde = ");
-    S
+    Serial.println(piezzoValue);
+  }
+
+  delay(500); // 0,5s interval voor overzichtelijke output
+}
