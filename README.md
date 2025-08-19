@@ -64,12 +64,8 @@ Het doel is om automatisch basketball-scores te registreren.
   - SIG → D4  
 
 - **Piezo-sensor**  
-  - + → A0  
-  - – → GND  
-
-- **Indicator LED**  
-  - Anode (+) → D13 via 330Ω weerstand  
-  - Kathode (–) → GND  
+  - Anode (+) → A0  
+  - Kathode (-) → GND  
 
 - **NeoPixel stick**  
   - VCC → 5V  
