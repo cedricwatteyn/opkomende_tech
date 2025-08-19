@@ -45,8 +45,7 @@ Het doel is om automatisch basketball-scores te registreren.
 ---
 
 ## 🪛 Bedradingsschema
-![schema](<img width="819" height="715" alt="image" src="https://github.com/user-attachments/assets/b557930d-c638-4da4-8ec3-c1f790731e4a" />
-)
+![schema](.imgs/bedradingsschema.jpg)
 
 **Belangrijkste aansluitingen:**
 
