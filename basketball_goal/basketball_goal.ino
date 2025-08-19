@@ -3,12 +3,12 @@
 #include <DFRobotDFPlayerMini.h>
 
 // ---------- Pins ----------
-const int ky032Pin = 2;       // KY-032 IR sensor
-const int groveIRPin = 4;     // Grove IR sensor
-const int platePin = 3;       // Startknop
-const int ledPin = 13;        // Indicator LED
-const int neoPin = 6;         // NeoPixel data pin
-const int piezzoPin = A0;     // Piezzo sensor op het bord
+const int irReceiverPin = 2;    // Grove IR receiver
+const int ky032VCC = 4;         // KY-032 IR zender VCC
+const int platePin = 3;         // Startknop
+const int ledPin = 13;          // Indicator LED
+const int neoPin = 6;           // NeoPixel data pin
+const int piezzoPin = A0;       // Piezzo sensor op het bord
 
 // ---------- NeoPixel ----------
 const int numPixels = 8;
@@ -25,7 +25,7 @@ bool beamBroken = false;
 bool piezzoHit = false;
 
 int currentPixel = 0;
-int score = 0;             // Score teller
+int score = 0;            // Score teller
 int scoreWithoutBoard = 0; // Score zonder bord
 
 // ---------- Piezzo drempel ----------
@@ -33,10 +33,13 @@ const int piezzoThreshold = 100; // waarde afhankelijk van piezzo, moet getest w
 
 void setup() {
   // ---------- Input/Output ----------
-  pinMode(ky032Pin, INPUT);
-  pinMode(groveIRPin, INPUT);
+  pinMode(irReceiverPin, INPUT);
+  pinMode(ky032VCC, OUTPUT);
   pinMode(platePin, INPUT_PULLUP);
   pinMode(ledPin, OUTPUT);
+
+  // Zet KY-032 zender aan
+  digitalWrite(ky032VCC, HIGH);
 
   Serial.begin(9600);
 
@@ -57,8 +60,7 @@ void setup() {
 
 void loop() {
   // ---------- Lees inputs ----------
-  int ky032State = digitalRead(ky032Pin);
-  int groveState = digitalRead(groveIRPin);
+  int beamState = digitalRead(irReceiverPin);
   int startState = digitalRead(platePin);
   int piezzoValue = analogRead(piezzoPin);
 
@@ -72,8 +74,8 @@ void loop() {
   }
 
   if (countdownActive) {
-    // Check beide IR beams: als één HIGH is, is de beam doorbroken
-    if (ky032State == HIGH || groveState == HIGH) {
+    // Check IR beam (Grove IR sensor)
+    if (beamState == HIGH) { // HIGH betekent onderbroken
       beamBroken = true;
     }
 
