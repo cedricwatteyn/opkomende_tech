@@ -1,0 +1,49 @@
+// ---------- Pins ----------
+const int irReceiverPin = 2;   // Grove IR receiver
+const int ky032VCC = 4;        // KY-032 IR zender
+const int platePin = 3;        // Startknop
+const int piezzoPin = A0;      // Piezzo sensor op het bord
+
+// ---------- Piezzo drempel ----------
+const int piezzoThreshold = 100; // moet getest worden
+
+void setup() {
+  pinMode(irReceiverPin, INPUT);
+  pinMode(ky032VCC, OUTPUT);
+  pinMode(platePin, INPUT_PULLUP);
+
+  // KY-032 zender inschakelen
+  digitalWrite(ky032VCC, HIGH);
+
+  Serial.begin(9600);
+  Serial.println("Input Test gestart...");
+}
+
+void loop() {
+  // Lees inputs
+  int beamState = digitalRead(irReceiverPin);
+  int startState = digitalRead(platePin);
+  int piezzoValue = analogRead(piezzoPin);
+
+  // Startknop
+  if (startState == LOW) {
+    Serial.println("Startknop ingedrukt!");
+  } else {
+    Serial.println("Startknop niet ingedrukt");
+  }
+
+  // IR-beam
+  if (beamState == HIGH) {
+    Serial.println("IR-beam onderbroken!");
+  } else {
+    Serial.println("IR-beam vrij");
+  }
+
+  // Piezzo
+  if (piezzoValue > piezzoThreshold) {
+    Serial.print("Piezzo piek gedetecteerd! Waarde = ");
+    Serial.println(piezzoValue);
+  }
+
+  delay(500); // 0,5s interval voor overzichtelijke output
+}
