@@ -45,7 +45,7 @@ Het doel is om automatisch basketball-scores te registreren.
 ---
 
 ## 🪛 Bedradingsschema
-![schema](.imgs/bedradingsschema.jpg)
+![schema](./imgs/bedradingsschema.jpg)
 
 **Belangrijkste aansluitingen:**
 
