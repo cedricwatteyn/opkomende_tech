@@ -3,11 +3,12 @@
 #include <DFRobotDFPlayerMini.h>
 
 // ---------- Pins ----------
-const int irReceiverPin = 2;    // IR beam sensor
-const int platePin = 3;         // Startknop
-const int ledPin = 13;          // Indicator LED
-const int neoPin = 6;           // NeoPixel data pin
-const int piezzoPin = A0;       // Piezzo sensor op het bord
+const int ky032Pin = 2;       // KY-032 IR sensor
+const int groveIRPin = 4;     // Grove IR sensor
+const int platePin = 3;       // Startknop
+const int ledPin = 13;        // Indicator LED
+const int neoPin = 6;         // NeoPixel data pin
+const int piezzoPin = A0;     // Piezzo sensor op het bord
 
 // ---------- NeoPixel ----------
 const int numPixels = 8;
@@ -24,7 +25,7 @@ bool beamBroken = false;
 bool piezzoHit = false;
 
 int currentPixel = 0;
-int score = 0;            // Score teller
+int score = 0;             // Score teller
 int scoreWithoutBoard = 0; // Score zonder bord
 
 // ---------- Piezzo drempel ----------
@@ -32,7 +33,8 @@ const int piezzoThreshold = 100; // waarde afhankelijk van piezzo, moet getest w
 
 void setup() {
   // ---------- Input/Output ----------
-  pinMode(irReceiverPin, INPUT);
+  pinMode(ky032Pin, INPUT);
+  pinMode(groveIRPin, INPUT);
   pinMode(platePin, INPUT_PULLUP);
   pinMode(ledPin, OUTPUT);
 
@@ -55,7 +57,8 @@ void setup() {
 
 void loop() {
   // ---------- Lees inputs ----------
-  int beamState = digitalRead(irReceiverPin);
+  int ky032State = digitalRead(ky032Pin);
+  int groveState = digitalRead(groveIRPin);
   int startState = digitalRead(platePin);
   int piezzoValue = analogRead(piezzoPin);
 
@@ -69,8 +72,8 @@ void loop() {
   }
 
   if (countdownActive) {
-    // Check IR beam
-    if (beamState == HIGH) {
+    // Check beide IR beams: als één HIGH is, is de beam doorbroken
+    if (ky032State == HIGH || groveState == HIGH) {
       beamBroken = true;
     }
 
