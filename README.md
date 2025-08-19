@@ -1,7 +1,7 @@
 # Arduino Basketball Score Tracker 🏀
 
 > Een Arduino-project dat scores registreert met behulp van een IR-sensor, piezo-sensor en visuele/audio feedback via NeoPixels en een DFPlayer Mini.
-
+![arcadegame](./imgs/basketball_arcade.jpg)
 ---
 
 ## 📖 Inhoudstafel
