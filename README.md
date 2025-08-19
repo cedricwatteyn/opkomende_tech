@@ -27,6 +27,7 @@ Het doel is om automatisch basketball-scores te registreren.
 - Scores mét en zonder bord worden apart geteld.
 - NeoPixels tonen de scorestatus.
 - DFPlayer Mini speelt geluidseffecten af bij score of miss.
+- Knop die 5 second timer start wanneer je kan werpen.
 
 ---
 
@@ -34,8 +35,7 @@ Het doel is om automatisch basketball-scores te registreren.
 - Arduino Nano 33 IoT  
 - Startknop (EG STARTS 5X)  
 - IR-sensoren: KY-032 + Grove IR ontvanger  
-- Piezo-sensor  
-- LED + 330Ω weerstand  
+- Piezo-sensor    
 - NeoPixel stick (8 LEDs)  
 - DFPlayer Mini + 8Ω speaker  
 - Condensator (1000 µF, 6.3V of hoger)  
