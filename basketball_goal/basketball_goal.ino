@@ -1,17 +1,5 @@
 #include <Adafruit_NeoPixel.h>
 
-<<<<<<< HEAD
-const int irReceiverPin = 2;   // IR receiver pin
-const int ledPin = 13;         //  LED
-const int platePin = 3;        // Pressure plate pin
-
-// Neopixel settings
-const int neoPin = 6;          // Data pin voor NeoPixel stick
-const int numPixels = 8;       // Aantal LED's
-Adafruit_NeoPixel pixels(numPixels, neoPin, NEO_GRB + NEO_KHZ800);
-
-=======
-// ---------- Pins ----------
 const int irReceiverPin = 2;    // Grove IR receiver
 const int ky032VCC = 4;         // KY-032 IR zender VCC
 const int platePin = 3;         // Startknop
@@ -34,11 +22,7 @@ unsigned long countdownStartTime = 0;
 bool beamBroken = false;
 bool piezzoHit = false;
 
-<<<<<<< HEAD
-int currentPixel = 0; // Welke pixel als vervolgens moet branden
 
-void setup() {
-=======
 int currentPixel = 0;
 int score = 0;            // Score teller
 int scoreWithoutBoard = 0; // Score zonder bord
