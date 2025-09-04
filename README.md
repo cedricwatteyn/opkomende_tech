@@ -10,10 +10,7 @@
 3. [Bedradingsschema](#-bedradingsschema)
 4. [Installatie](#-installatie)
 5. [Gebruik](#-gebruik)
-6. [Repository structuur](#-repository-structuur)
-7. [Voorbeeldoutput](#-voorbeeldoutput)
-8. [Licentie](#-licentie)
-9. [Auteurs](#-auteurs)
+
 
 ---
 
