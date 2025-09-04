@@ -83,4 +83,4 @@ Het doel is om automatisch basketball-scores te registreren.
 ## 💻 Installatie
 1. Clone deze repository:
    ```bash
-   git clone [https://github.com/username/repo-name.git](https://github.com/cedricwatteyn/opkomende_tech.git)
+   git clone https://github.com/cedricwatteyn/opkomende_tech.git
