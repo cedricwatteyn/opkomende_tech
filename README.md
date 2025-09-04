@@ -9,7 +9,6 @@
 2. [Benodigdheden](#-benodigdheden)
 3. [Bedradingsschema](#-bedradingsschema)
 4. [Installatie](#-installatie)
-5. [Gebruik](#-gebruik)
 
 
 ---
