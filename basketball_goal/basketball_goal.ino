@@ -1,20 +1,19 @@
 #include <Adafruit_NeoPixel.h>
-#include <SoftwareSerial.h>
 #include <DFRobotDFPlayerMini.h>
 
+// ---------- Pin definitions ----------
 const int irReceiverPin = 2;    // Grove IR receiver
-const int ky032VCC = 4;         // KY-032 IR zender VCC
-const int platePin = 3;         // Startknop
-const int ledPin = 13;          // Indicator LED
-const int neoPin = 6;           // NeoPixel data pin
-const int piezzoPin = A0;       // Piezzo sensor op het bord
+const int ky032VCC      = 4;    // KY-032 IR zender VCC
+const int platePin      = 3;    // Startknop
+const int ledPin        = 13;   // Indicator LED
+const int neoPin        = 6;    // NeoPixel data pin
+const int piezzoPin     = A0;   // Piezzo sensor op het bord
 
 // ---------- NeoPixel ----------
 const int numPixels = 8;
 Adafruit_NeoPixel pixels(numPixels, neoPin, NEO_GRB + NEO_KHZ800);
 
 // ---------- DFPlayer ----------
-SoftwareSerial mySerial(10, 11); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
 
 // ---------- Game state ----------
@@ -24,11 +23,11 @@ bool beamBroken = false;
 bool piezzoHit = false;
 
 int currentPixel = 0;
-int score = 0;             // Score teller
-int scoreWithoutBoard = 0; // Score zonder bord
+int score = 0;             
+int scoreWithoutBoard = 0; 
 
 // ---------- Piezzo drempel ----------
-const int piezzoThreshold = 100; // waarde afhankelijk van piezzo, moet getest worden
+const int piezzoThreshold = 100; // afhankelijk van piezzo, moet getest worden
 
 void setup() {
   // ---------- Input/Output ----------
@@ -40,7 +39,9 @@ void setup() {
   // Zet KY-032 zender aan
   digitalWrite(ky032VCC, HIGH);
 
-  Serial.begin(9600);
+  // ---------- Serial ----------
+  Serial.begin(9600);     // USB serial (debugging)
+  Serial1.begin(9600);    // Hardware serial for DFPlayer
 
   // ---------- NeoPixel ----------
   pixels.begin();
@@ -48,8 +49,7 @@ void setup() {
   pixels.show();
 
   // ---------- DFPlayer ----------
-  mySerial.begin(9600);
-  if (!myDFPlayer.begin(mySerial)) {
+  if (!myDFPlayer.begin(Serial1)) {
     Serial.println("DFPlayer Mini niet gevonden!");
     while (true); // stop als module niet gevonden
   }
@@ -59,8 +59,8 @@ void setup() {
 
 void loop() {
   // ---------- Lees inputs ----------
-  int beamState = digitalRead(irReceiverPin);
-  int startState = digitalRead(platePin);
+  int beamState   = digitalRead(irReceiverPin);
+  int startState  = digitalRead(platePin);
   int piezzoValue = analogRead(piezzoPin);
 
   // ---------- Start countdown ----------
@@ -74,7 +74,7 @@ void loop() {
 
   if (countdownActive) {
     // Check IR beam (Grove IR sensor)
-    if (beamState == HIGH) { // HIGH betekent onderbroken
+    if (beamState == HIGH) { 
       beamBroken = true;
     }
 
@@ -86,3 +86,38 @@ void loop() {
     // Na 5 seconden countdown
     if (millis() - countdownStartTime >= 5000) {
       if (beamBroken) {
+        if (piezzoHit) {
+          score++;
+          Serial.print("Score + bord! Totaal = ");
+          Serial.println(score);
+
+          digitalWrite(ledPin, HIGH);
+          pixels.setPixelColor(currentPixel, pixels.Color(0, 255, 0)); // Groen
+          myDFPlayer.play(1); // Score geluid
+        } else {
+          scoreWithoutBoard++;
+          Serial.print("Score zonder bord! Totaal = ");
+          Serial.println(scoreWithoutBoard);
+
+          digitalWrite(ledPin, LOW);
+          pixels.setPixelColor(currentPixel, pixels.Color(255, 0, 0)); // Rood
+          myDFPlayer.play(2); // Miss/zonder bord geluid
+        }
+      } else {
+        Serial.println("Miss!");
+        digitalWrite(ledPin, LOW);
+        pixels.setPixelColor(currentPixel, pixels.Color(0, 0, 255)); // Blauw
+        myDFPlayer.play(2); // Miss geluid
+      }
+
+      pixels.show();
+
+      // Volgende pixel
+      currentPixel++;
+      if (currentPixel >= numPixels) currentPixel = 0;
+
+      // Reset countdown
+      countdownActive = false;
+    }
+  }
+}
